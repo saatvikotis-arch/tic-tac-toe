@@ -100,7 +100,7 @@ class SoundEngine {
   }
 }
 
-// --- Confetti System ---
+// --- Confetti System in Crimson & White ---
 class ConfettiEffect {
   constructor(canvasId) {
     this.canvas = document.getElementById(canvasId);
@@ -118,7 +118,7 @@ class ConfettiEffect {
 
   trigger() {
     this.particles = [];
-    const colors = ['#38bdf8', '#f43f5e', '#fbbf24', '#6366f1', '#a855f7', '#34d399'];
+    const colors = ['#ff1e4d', '#ff3366', '#ffffff', '#e2e8f0', '#990024', '#ff758f'];
     for (let i = 0; i < 90; i++) {
       this.particles.push({
         x: this.canvas.width / 2,
@@ -198,7 +198,8 @@ const gameModeSelect = document.getElementById('game-mode');
 const difficultySelect = document.getElementById('ai-difficulty');
 const difficultyWrapper = document.getElementById('difficulty-wrapper');
 const soundToggleBtn = document.getElementById('sound-toggle');
-const soundIcon = document.getElementById('sound-icon');
+const soundIconOn = document.getElementById('sound-icon-on');
+const soundIconOff = document.getElementById('sound-icon-off');
 const playerOLabel = document.getElementById('player-o-label');
 const scoreXCard = document.getElementById('score-x-card');
 const scoreOCard = document.getElementById('score-o-card');
@@ -238,7 +239,7 @@ function setupEventListeners() {
   gameModeSelect.addEventListener('change', (e) => {
     sounds.playClick();
     GameState.gameMode = e.target.value;
-    difficultyWrapper.style.display = GameState.gameMode === 'pve' ? 'flex' : 'none';
+    difficultyWrapper.style.visibility = GameState.gameMode === 'pve' ? 'visible' : 'hidden';
     playerOLabel.textContent = GameState.gameMode === 'pve' ? 'AI (Player O)' : 'Player O';
     restartGame();
   });
@@ -251,8 +252,14 @@ function setupEventListeners() {
 
   soundToggleBtn.addEventListener('click', () => {
     sounds.muted = !sounds.muted;
-    soundIcon.textContent = sounds.muted ? '🔇' : '🔊';
-    if (!sounds.muted) sounds.playClick();
+    if (sounds.muted) {
+      soundIconOn.classList.add('hidden');
+      soundIconOff.classList.remove('hidden');
+    } else {
+      soundIconOn.classList.remove('hidden');
+      soundIconOff.classList.add('hidden');
+      sounds.playClick();
+    }
   });
 }
 
@@ -272,7 +279,7 @@ function handleCellClick(e) {
         aiMove();
         setBoardInteractive(true);
       }
-    }, 350);
+    }, 320);
   }
 }
 
@@ -335,7 +342,7 @@ function checkResult() {
     saveScores();
     updateScoreDisplay();
     sounds.playTie();
-    statusText.innerHTML = `🤝 <span style="color: var(--color-tie)">It's a Draw!</span>`;
+    statusText.innerHTML = `🤝 <span style="color: var(--color-draw)">It's a Draw!</span>`;
     updateTurnIndicator(null);
     return;
   }
